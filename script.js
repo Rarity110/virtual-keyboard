@@ -430,7 +430,6 @@ class Keyboard {
                 this.simbol.textContent = symbol.lang.en;
                 this.simbol.setAttribute('id', symbol.code);
                 this.keys[symbol.code] = {lang : symbol.lang, simb: symbol.simb}
-                // console.log(this.keys);
             });
         });
         this.information = document.createElement('div');
@@ -459,36 +458,29 @@ class Keyboard {
             e.stopImmediatePropagation();
             e.preventDefault();
             this.textarea.focus();
+            
+            // прослушивание capslock, перерисовка клавиатуры, изменение регистра 
             if (e.code === 'CapsLock') {
-                e.preventDefault();
                 const capsLock = document.getElementById('CapsLock');
                 if (this.caps === false) {
-                    // console.log(this.caps);
                     this.caps = true;
                     capsLock.classList.add('activ');
-                    this.uppercase(e);
-                    // if (this.keys[e.code].simb === false) {
-                    //     this.textarea.value = this.textarea.value + this.keys[e.code].lang.en.toUpperCase();
-                    // }
-                    
+                    this.changeCase(e);
                 } else {
-                    // console.log(this.caps);
                     this.caps = false;
                     capsLock.classList.remove('activ');
-                    this.lowercase(e);
-                    // if (this.keys[e.code].simb === false) {
-                    //     this.textarea.value = this.textarea.value + this.keys[e.code].lang.en;
-                    // }
+                    this.changeCase(e);
                 }
-            }
-
-
-
-            if (this.keys[e.code].simb === false) {
+            } else if (this.keys[e.code].simb === false) {
+              if (this.caps) {
+                this.textarea.value = this.textarea.value + this.keys[e.code].lang.en.toUpperCase();
+              } else {
                 this.textarea.value = this.textarea.value + this.keys[e.code].lang.en;
+              }
             }
           })
 
+          // создание кейбордивента на виртуальной клавиатуре
           this.keyboard.addEventListener('click', (e) => {
               if (e.target.classList.contains('simbol')) {
                 this.textarea.focus();
@@ -511,17 +503,19 @@ class Keyboard {
           })
     }
 
-    uppercase(shiftKey) {
+    changeCase(shiftKey) {
         const simbols = this.keyboard.querySelectorAll('.simbol')
         simbols.forEach(simbol => {
             console.log(simbol.id);
             console.log(this.keys[simbol.id].simb);
             if (this.keys[simbol.id].simb === false) {
+              if (this.caps) {
                 simbol.textContent = simbol.textContent.toUpperCase();
+              } else {
+                simbol.textContent = simbol.textContent.toLowerCase();
+              }
             }
-          
         });
-        // this.textarea.value = this.textarea.value + this.keys[shiftKey.id].lang.en.toUpperCase();
     }
 }
 
