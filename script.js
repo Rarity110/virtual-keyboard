@@ -430,6 +430,7 @@ class Keyboard {
         this.simbol.textContent = symbol.lang.en;
         this.simbol.setAttribute('id', symbol.code);
         this.keys[symbol.code] = { lang: symbol.lang, simb: symbol.simb };
+        this.simbol.setAttribute('data-simb', symbol.simb);
       });
     });
     this.information = document.createElement('div');
@@ -458,26 +459,41 @@ class Keyboard {
       e.stopImmediatePropagation();
       e.preventDefault();
       this.textarea.focus();
-
+      const keyPress = document.getElementById(e.code);
       // прослушивание capslock, перерисовка клавиатуры, изменение регистра
       if (e.code === 'CapsLock') {
-        const capsLock = document.getElementById('CapsLock');
+        if (!e.shiftKey) {
+          if (this.caps === false) {
+            this.caps = true;
+            keyPress.classList.add('activ');
+            this.changeCase(e.shiftKey);
+          } else {
+            this.caps = false;
+            keyPress.classList.remove('activ');
+            this.changeCase(e.shiftKey);
+          }
+        }
+      } else if ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.repeat) {
         if (this.caps === false) {
-          // console.log('Enter in secgtion Caps', this.caps);
           this.caps = true;
-          capsLock.classList.add('activ');
-          // console.log('Before function call', this.caps);
+          keyPress.classList.add('activ');
           this.changeCase(e.shiftKey);
         } else {
           this.caps = false;
-          capsLock.classList.remove('activ');
+          keyPress.classList.add('activ');
           this.changeCase(e.shiftKey);
         }
-      } else if (this.keys[e.code].simb === false) {
-        if (this.caps) {
-          this.textarea.value += this.keys[e.code].lang.en.toUpperCase();
-        } else {
-          this.textarea.value += this.keys[e.code].lang.en;
+      // } else if (e.code === 'Shift') {
+      //   e.preventDefault();
+      //   this.changeCase(e.shiftKey);
+      } else {
+        keyPress.classList.add('activ');
+        if (this.keys[e.code].simb === false) {
+          if (this.caps) {
+            this.textarea.value += this.keys[e.code].lang.en.toUpperCase();
+          } else {
+            this.textarea.value += this.keys[e.code].lang.en;
+          }
         }
       }
     });
@@ -485,14 +501,22 @@ class Keyboard {
     document.addEventListener('keyup', (e) => {
       e.stopImmediatePropagation();
 
-      // const simb = document.getElementById(e.code);
-      // if (e.code !== 'CapsLock') {
-      //   simb.classList.remove('activ');
-      //   if (e.code === 'Shift') {
-      //     e.preventDefault();
-      //     this.changeCase(e.shiftKey);
-      //   }
-      // }
+      const keyPressed = document.getElementById(e.code);
+      if (e.code !== 'CapsLock' /* && e.code !== 'ShiftLeft' && e.code !== 'ShiftRight' */) {
+        setTimeout(() => {
+          keyPressed.classList.remove('activ');
+        }, 500);
+      }
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+        e.preventDefault();
+        keyPressed.classList.remove('activ');
+        if (this.caps === false) {
+          this.caps = true;
+        } else {
+          this.caps = false;
+        }
+        this.changeCase(e.shiftKey);
+      }
     });
 
     // создание кейбордивента на виртуальной клавиатуре
@@ -545,11 +569,8 @@ class Keyboard {
         simbols[i].textContent = shiftKey ? '?' : '/';
       } else if (simbols[i].id === '' && this.lang === 'ru') {
         simbols[i].textContent = shiftKey ? ',' : '.';
-      } else if (this.keys[simbols[i].id].simb === false) {
-        // console.log(this.keys[simbols[i].id]);
-        // console.log(this.caps);
-        // console.log(shiftKey);
-        if (((this.caps && !shiftKey) || (!this.caps && shiftKey))) {
+      } else if (simbols[i].dataset.simb === 'false') {
+        if (((this.caps))) {
           simbols[i].textContent = simbols[i].textContent.toUpperCase();
         } else {
           simbols[i].textContent = simbols[i].textContent.toLowerCase();
