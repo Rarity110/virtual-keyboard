@@ -462,16 +462,24 @@ class Keyboard {
       const keyPress = document.getElementById(e.code);
       // прослушивание capslock, перерисовка клавиатуры, изменение регистра
       if (e.code === 'CapsLock') {
-        if (!e.shiftKey) {
-          if (this.caps === false) {
-            this.caps = true;
-            keyPress.classList.add('activ');
-            this.changeCase(e.shiftKey);
-          } else {
-            this.caps = false;
+        //  if (!e.shiftKey) {
+        if (this.caps === false) {
+          this.caps = true;
+          if (keyPress.classList.contains('activ')) {
             keyPress.classList.remove('activ');
-            this.changeCase(e.shiftKey);
+          } else {
+            keyPress.classList.add('activ');
           }
+          this.changeCase(e.shiftKey);
+        } else {
+          this.caps = false;
+          if (keyPress.classList.contains('activ')) {
+            keyPress.classList.remove('activ');
+          } else {
+            keyPress.classList.add('activ');
+          }
+          this.changeCase(e.shiftKey);
+          // }
         }
       } else if ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.repeat) {
         if (this.caps === false) {
@@ -483,9 +491,6 @@ class Keyboard {
           keyPress.classList.add('activ');
           this.changeCase(e.shiftKey);
         }
-      // } else if (e.code === 'Shift') {
-      //   e.preventDefault();
-      //   this.changeCase(e.shiftKey);
       } else {
         keyPress.classList.add('activ');
         if (this.keys[e.code].simb === false) {
