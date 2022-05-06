@@ -506,6 +506,14 @@ class Keyboard {
           keyPress.classList.add('activ');
           this.changeCase(e.shiftKey);
         }
+      } else if (e.code === 'Tab') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.textarea.value += '\t';
+      } else if (e.code === 'Backspace') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.pressBackSpace();
       } else {
         // console.log(keyPress);
         keyPress.classList.add('activ');
@@ -608,6 +616,22 @@ class Keyboard {
       simbols[i].textContent = this.keys[simbols[i].id].lang[lang];
     }
     this.changeCase(shift);
+  }
+
+  pressBackSpace() {
+    const positionKursorStart = this.textarea.selectionStart;
+    const positionKursorEnd = this.textarea.selectionEnd;
+    if (positionKursorStart !== positionKursorEnd) {
+      this.textarea.value = this.textarea.value.slice(0, positionKursorStart)
+      + this.textarea.value.slice(positionKursorEnd);
+      this.textarea.selectionStart = positionKursorStart;
+      this.textarea.selectionEnd = this.textarea.selectionStart;
+    } else {
+      this.textarea.value = this.textarea.value.slice(0, positionKursorStart - 1)
+      + this.textarea.value.slice(positionKursorEnd);
+      this.textarea.selectionStart = positionKursorStart - 1;
+      this.textarea.selectionEnd = this.textarea.selectionStart;
+    }
   }
 }
 
