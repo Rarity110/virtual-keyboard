@@ -514,6 +514,10 @@ class Keyboard {
         keyPress.classList.add('activ');
         e.preventDefault();
         this.pressBackSpace();
+      } else if (e.code === 'Delete') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.pressDelete();
       } else {
         // console.log(keyPress);
         keyPress.classList.add('activ');
@@ -630,6 +634,22 @@ class Keyboard {
       this.textarea.value = this.textarea.value.slice(0, positionKursorStart - 1)
       + this.textarea.value.slice(positionKursorEnd);
       this.textarea.selectionStart = positionKursorStart - 1;
+      this.textarea.selectionEnd = this.textarea.selectionStart;
+    }
+  }
+
+  pressDelete() {
+    const positionKursorStart = this.textarea.selectionStart;
+    const positionKursorEnd = this.textarea.selectionEnd;
+    if (positionKursorStart !== positionKursorEnd) {
+      this.textarea.value = this.textarea.value.slice(0, positionKursorStart)
+      + this.textarea.value.slice(positionKursorEnd);
+      this.textarea.selectionStart = positionKursorStart;
+      this.textarea.selectionEnd = this.textarea.selectionStart;
+    } else {
+      this.textarea.value = this.textarea.value.slice(0, positionKursorStart)
+      + this.textarea.value.slice(positionKursorEnd + 1);
+      this.textarea.selectionStart = positionKursorStart;
       this.textarea.selectionEnd = this.textarea.selectionStart;
     }
   }
