@@ -339,7 +339,7 @@ const keyboardButtons = [
   ],
   [
     {
-      code: 'Controlleft',
+      code: 'ControlLeft',
       simb: true,
       lang: { en: 'Ctrl', ru: 'Ctrl' },
       width: 'long',
@@ -351,7 +351,7 @@ const keyboardButtons = [
       width: 'normal',
     },
     {
-      code: 'Altleft',
+      code: 'AltLeft',
       simb: true,
       lang: { en: 'Alt', ru: 'Alt' },
       width: 'long',
@@ -398,7 +398,11 @@ const keyboardButtons = [
 class Keyboard {
   constructor() {
     this.caps = false;
-    this.lang = 'en';
+    if (localStorage.getItem('lang') === 'ru') {
+      this.lang = 'ru';
+    } else {
+      this.lang = 'en';
+    }
   }
 
   // создание body
@@ -443,7 +447,7 @@ class Keyboard {
     this.changelanguage = document.createElement('p');
     this.information.appendChild(this.changelanguage);
     this.changelanguage.classList.add('informationtext');
-    this.changelanguage.textContent = 'Для переключения языка комбинация: левые shift + alt';
+    this.changelanguage.textContent = 'Для переключения языка комбинация: левые ctrl + alt';
     this.textarea.focus();
     this.addListeners();
   }
@@ -481,6 +485,17 @@ class Keyboard {
           this.changeCase(e.shiftKey);
           // }
         }
+      } else if (e.ctrlKey && e.altKey && !e.repeat) {
+        keyPress.classList.add('activ');
+        // console.log(e.code);
+        e.preventDefault();
+        if (this.lang === 'en') {
+          this.lang = 'ru';
+        } else {
+          this.lang = 'en';
+        }
+        localStorage.setItem('lang', this.lang);
+        this.changingLanguage(this.lang, e.shiftKey);
       } else if ((e.code === 'ShiftLeft' || e.code === 'ShiftRight') && !e.repeat) {
         if (this.caps === false) {
           this.caps = true;
@@ -492,12 +507,13 @@ class Keyboard {
           this.changeCase(e.shiftKey);
         }
       } else {
+        // console.log(keyPress);
         keyPress.classList.add('activ');
         if (this.keys[e.code].simb === false) {
           if (this.caps) {
-            this.textarea.value += this.keys[e.code].lang.en.toUpperCase();
+            this.textarea.value += keyPress.textContent.toUpperCase();
           } else {
-            this.textarea.value += this.keys[e.code].lang.en;
+            this.textarea.value += keyPress.textContent;
           }
         }
       }
@@ -549,16 +565,17 @@ class Keyboard {
 
   changeCase(shiftKey) {
     const simbols = Array.from(this.keyboard.querySelectorAll('.simbol'));
+    // console.log(this.lang);
     for (let i = 0; i < simbols.length; i += 1) {
       if (simbols[i].id === 'Backquote' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '~' : '`';
       } else if (simbols[i].id === 'Minus' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '_' : '-';
-      } else if (simbols[i].id === 'Equel' && this.lang === 'en') {
+      } else if (simbols[i].id === 'Equal' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '+' : '=';
-      } else if (simbols[i] === 'BracketLeft' && this.lang === 'en') {
+      } else if (simbols[i].id === 'BracketLeft' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '{' : '[';
-      } else if (simbols[i] === 'BracketRight' && this.lang === 'en') {
+      } else if (simbols[i].id === 'BracketRight' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '}' : ']';
       } else if (simbols[i].id === 'Backslash' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '|' : '\\';
@@ -572,7 +589,7 @@ class Keyboard {
         simbols[i].textContent = shiftKey ? '>' : '.';
       } else if (simbols[i].id === 'Slash' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '?' : '/';
-      } else if (simbols[i].id === '' && this.lang === 'ru') {
+      } else if (simbols[i].id === 'Slash' && this.lang === 'ru') {
         simbols[i].textContent = shiftKey ? ',' : '.';
       } else if (simbols[i].dataset.simb === 'false') {
         if (((this.caps))) {
@@ -582,6 +599,15 @@ class Keyboard {
         }
       }
     }
+  }
+
+  changingLanguage(lang, shift = false) {
+    const simbols = Array.from(this.keyboard.querySelectorAll('.simbol'));
+    for (let i = 0; i < simbols.length; i += 1) {
+      // console.log(this.keys[simbols[i].id].lang[lang]);
+      simbols[i].textContent = this.keys[simbols[i].id].lang[lang];
+    }
+    this.changeCase(shift);
   }
 }
 
