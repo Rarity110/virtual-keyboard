@@ -325,7 +325,7 @@ const keyboardButtons = [
       width: 'normal',
     },
     {
-      code: 'Arrowup',
+      code: 'ArrowUp',
       simb: true,
       lang: { en: '⯅', ru: '⯅' },
       width: 'normal',
@@ -369,19 +369,19 @@ const keyboardButtons = [
       width: 'long',
     },
     {
-      code: 'Arrowleft',
+      code: 'ArrowLeft',
       simb: true,
       lang: { en: '⯇', ru: '⯇' },
       width: 'normal',
     },
     {
-      code: 'Arrowdown',
+      code: 'ArrowDown',
       simb: true,
       lang: { en: '⯆', ru: '⯆' },
       width: 'normal',
     },
     {
-      code: 'Arrowright',
+      code: 'ArrowRight',
       func: true,
       lang: { en: '⯈', ru: '⯈' },
       width: 'normal',
@@ -416,6 +416,11 @@ class Keyboard {
     this.title.textContent = 'RSS Виртуальная клавиатура';
     this.textarea = document.createElement('textarea');
     this.main.appendChild(this.textarea);
+
+    this.textarea.cols = '5';
+    this.textarea.rows = '5';
+    // this.textarea.wrap = 'hard';
+
     this.textarea.classList.add('text-area');
 
     this.keyboard = document.createElement('div');
@@ -464,6 +469,11 @@ class Keyboard {
       e.preventDefault();
       this.textarea.focus();
       const keyPress = document.getElementById(e.code);
+
+      if (!keyPress) {
+        e.preventDefault();
+        return;
+      }
       // прослушивание capslock, перерисовка клавиатуры, изменение регистра
       if (e.code === 'CapsLock') {
         //  if (!e.shiftKey) {
@@ -487,7 +497,6 @@ class Keyboard {
         }
       } else if (e.ctrlKey && e.altKey && !e.repeat) {
         keyPress.classList.add('activ');
-        // console.log(e.code);
         e.preventDefault();
         if (this.lang === 'en') {
           this.lang = 'ru';
@@ -509,7 +518,7 @@ class Keyboard {
       } else if (e.code === 'Tab') {
         keyPress.classList.add('activ');
         e.preventDefault();
-        this.textarea.value += '\t';
+        this.writeText('\t');
       } else if (e.code === 'Backspace') {
         keyPress.classList.add('activ');
         e.preventDefault();
@@ -518,16 +527,28 @@ class Keyboard {
         keyPress.classList.add('activ');
         e.preventDefault();
         this.pressDelete();
+      } else if (e.code === 'Enter') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.writeText('\n');
+      } else if (e.code === 'ArrowUp') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.arrowUp();
       } else {
-        // console.log(keyPress);
         keyPress.classList.add('activ');
         if (this.keys[e.code].simb === false) {
+          const keyPresses = document.getElementById(e.code);
           if (this.caps) {
-            this.textarea.value += keyPress.textContent.toUpperCase();
+            this.writeText(keyPresses.textContent.toUpperCase());
           } else {
-            this.textarea.value += keyPress.textContent;
+            this.writeText(keyPresses.textContent);
           }
         }
+      }
+      const lines = this.textarea.value.split('\n');
+      if (lines[lines.length - 1].length > 59) {
+        this.writeText('\n');
       }
     });
 
@@ -535,6 +556,10 @@ class Keyboard {
       e.stopImmediatePropagation();
 
       const keyPressed = document.getElementById(e.code);
+      if (!keyPressed) {
+        e.preventDefault();
+        return;
+      }
       if (e.code !== 'CapsLock' /* && e.code !== 'ShiftLeft' && e.code !== 'ShiftRight' */) {
         setTimeout(() => {
           keyPressed.classList.remove('activ');
@@ -638,6 +663,43 @@ class Keyboard {
     }
   }
 
+  arrowUp() {
+    const massText = this.textarea.value.split('\n');
+    let countTemp = 0;
+    let lineNumber = 0;
+    let lengthOfPrevLine = 0;
+    let lengthOfPrevPrevLine = 0;
+
+    for (let m = 0; m < massText.length; m += 1) {
+      if (countTemp < this.textarea.selectionStart) {
+        countTemp += (massText[m].length + 1);
+        lineNumber = m;
+      }
+    }
+
+    if (this.textarea.selectionStart < massText[0].length) return;
+
+    for (let n = 0; n < lineNumber; n += 1) {
+      lengthOfPrevLine += massText[n].length;
+    }
+    if (massText.length < 3) {
+      lengthOfPrevPrevLine = 0;
+    } else {
+      for (let n = 0; n < lineNumber - 1; n += 1) {
+        lengthOfPrevPrevLine += massText[n].length;
+      }
+    }
+    const positionKursorInLine = this.textarea.selectionStart - lineNumber - lengthOfPrevLine;
+    if (positionKursorInLine === massText[lineNumber].length + 1) {
+      this.textarea.selectionStart = lengthOfPrevLine + lineNumber;
+    } else if (massText[lineNumber - 1].length < positionKursorInLine) {
+      this.textarea.selectionStart = lengthOfPrevLine + lineNumber - 1;
+    } else {
+      this.textarea.selectionStart = lengthOfPrevPrevLine + positionKursorInLine + lineNumber - 1;
+    }
+    this.textarea.selectionEnd = this.textarea.selectionStart;
+  }
+
   pressDelete() {
     const positionKursorStart = this.textarea.selectionStart;
     const positionKursorEnd = this.textarea.selectionEnd;
@@ -652,6 +714,14 @@ class Keyboard {
       this.textarea.selectionStart = positionKursorStart;
       this.textarea.selectionEnd = this.textarea.selectionStart;
     }
+  }
+
+  writeText(lett) {
+    const positionKursorStart = this.textarea.selectionStart;
+    this.textarea.value = this.textarea.value.slice(0, positionKursorStart)
+    + lett + this.textarea.value.slice(positionKursorStart);
+    this.textarea.selectionStart = positionKursorStart + 1;
+    this.textarea.selectionEnd = this.textarea.selectionStart;
   }
 }
 
