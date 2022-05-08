@@ -537,6 +537,14 @@ class Keyboard {
         keyPress.classList.add('activ');
         e.preventDefault();
         this.arrowDown();
+      } else if (e.code === 'ArrowLeft') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.arrowLeft();
+      } else if (e.code === 'ArrowRight') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.arrowRight();
       } else {
         keyPress.classList.add('activ');
         if (this.keys[e.code].simb === false) {
@@ -740,6 +748,18 @@ class Keyboard {
     } else {
       this.textarea.selectionStart = lengthOfCurrLine + positionKursorInLine + lineNumber + 1;
     }
+    this.textarea.selectionEnd = this.textarea.selectionStart;
+  }
+
+  arrowLeft() {
+    if (this.textarea.selectionStart !== 0) {
+      this.textarea.selectionStart -= 1;
+      this.textarea.selectionEnd = this.textarea.selectionStart;
+    }
+  }
+
+  arrowRight() {
+    this.textarea.selectionStart += 1;
     this.textarea.selectionEnd = this.textarea.selectionStart;
   }
 
