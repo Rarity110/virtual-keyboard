@@ -50,17 +50,13 @@ h1 {
 }
 
 .keyboardRow {
-    /* max-height: calc(20%); */
     height: 19.5%;
-    /* max-width: 95%; */
-    /* margin: 1% 1% 1% 1%; */
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
 .simbol {
-    /* height: 99%; */
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-style: bold;
     font-size: 32px;
@@ -101,4 +97,5 @@ h1 {
 
 .activ {
     background-color: blue;
+    border-radius: 20px;
 }

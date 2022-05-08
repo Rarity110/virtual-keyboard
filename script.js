@@ -569,7 +569,9 @@ class Keyboard {
       }
       if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
         e.preventDefault();
-        keyPressed.classList.remove('activ');
+        setTimeout(() => {
+          keyPressed.classList.remove('activ');
+        }, 500);
         if (this.caps === false) {
           this.caps = true;
         } else {
@@ -642,7 +644,6 @@ class Keyboard {
   changingLanguage(lang, shift = false) {
     const simbols = Array.from(this.keyboard.querySelectorAll('.simbol'));
     for (let i = 0; i < simbols.length; i += 1) {
-      // console.log(this.keys[simbols[i].id].lang[lang]);
       simbols[i].textContent = this.keys[simbols[i].id].lang[lang];
     }
     this.changeCase(shift);
