@@ -5,7 +5,7 @@
 }
 
 .main {
-    max-width: 1280px;
+    max-width: 800px;
     width: 100%;
     margin: 0 auto;
     border: none;
@@ -15,7 +15,7 @@
 h1 {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-style: bold;
-    font-size: 64px;
+    font-size: 32px;
     line-height: 120%;
     color: #1a0f9a;
 }
@@ -28,11 +28,11 @@ h1 {
 .text-area {
     max-height: calc((100vh - 280px) / 2);
     height: 100%;
-    max-width: 1280px;
+    max-width: 800px;
     width: 100%;
     font-family: 'Roboto Mono', monospace;
     font-style: normal;
-    font-size: 32px;
+    font-size: 18px;
     padding-left: 5px;
     resize: none;
 }
@@ -40,7 +40,7 @@ h1 {
 .keyboard {
     max-height: calc((100vh - 280px) / 2);
     height: 100%;
-    max-width: 1280px;
+    max-width: 800px;
     width: 100%;
     background-color: silver;
     display: flex;
@@ -59,7 +59,7 @@ h1 {
 .simbol {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-style: bold;
-    font-size: 32px;
+    font-size: 16px;
     margin: 0.1% 0.1% 0.1% 0.1%;
     color: white;
     background-color: rgb(78, 75, 75);
@@ -91,7 +91,7 @@ h1 {
     margin-bottom: 30px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-style: normal;
-    font-size: 32px;
+    font-size: 14px;
     color: #1a0f9a;
 }
 
