@@ -549,7 +549,7 @@ class Keyboard {
         }
       }
       const lines = this.textarea.value.split('\n');
-      if (lines[lines.length - 1].length > 59) {
+      if (lines[lines.length - 1].length > 70) {
         this.writeText('\n');
       }
     });
