@@ -405,7 +405,6 @@ class Keyboard {
     }
   }
 
-  // создание body
   makeKeyboard() {
     this.main = document.createElement('main');
     document.body.appendChild(this.main);
@@ -416,13 +415,7 @@ class Keyboard {
     this.title.textContent = 'RSS Виртуальная клавиатура';
     this.textarea = document.createElement('textarea');
     this.main.appendChild(this.textarea);
-
-    this.textarea.cols = '5';
-    this.textarea.rows = '5';
-    // this.textarea.wrap = 'hard';
-
     this.textarea.classList.add('text-area');
-
     this.keyboard = document.createElement('div');
     this.main.appendChild(this.keyboard);
     this.keyboard.classList.add('keyboard');
@@ -436,9 +429,9 @@ class Keyboard {
         this.keyboardRow.appendChild(this.simbol);
         this.simbol.classList.add('simbol');
         this.simbol.classList.add(symbol.width);
-        this.simbol.textContent = symbol.lang.en;
         this.simbol.setAttribute('id', symbol.code);
         this.keys[symbol.code] = { lang: symbol.lang, simb: symbol.simb };
+        this.simbol.textContent = this.keys[symbol.code].lang[this.lang];
         this.simbol.setAttribute('data-simb', symbol.simb);
       });
     });
@@ -474,7 +467,6 @@ class Keyboard {
         e.preventDefault();
         return;
       }
-      // прослушивание capslock, перерисовка клавиатуры, изменение регистра
       if (e.code === 'CapsLock') {
         if (this.caps === false) {
           this.caps = true;
@@ -612,7 +604,6 @@ class Keyboard {
 
   changeCase(shiftKey) {
     const simbols = Array.from(this.keyboard.querySelectorAll('.simbol'));
-    // console.log(this.lang);
     for (let i = 0; i < simbols.length; i += 1) {
       if (simbols[i].id === 'Backquote' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '~' : '`';
