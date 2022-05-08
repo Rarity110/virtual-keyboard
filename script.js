@@ -577,14 +577,12 @@ class Keyboard {
         } else {
           this.caps = false;
         }
-        setTimeout(() => {
-          this.changeCase(e.shiftKey);
-        }, 500);
+        this.changeCase(e.shiftKey);
       }
     });
 
     // создание кейбордивента на виртуальной клавиатуре
-    this.keyboard.addEventListener('click', (e) => {
+    this.keyboard.addEventListener('mousedown', (e) => {
       if (e.target.classList.contains('simbol')) {
         this.textarea.focus();
         const keyboardKeyDown = new KeyboardEvent('keydown', {
@@ -594,7 +592,12 @@ class Keyboard {
           view: window,
         });
         document.dispatchEvent(keyboardKeyDown);
+      }
+    });
 
+    this.keyboard.addEventListener('mouseup', (e) => {
+      if (e.target.classList.contains('simbol')) {
+        this.textarea.focus();
         const keyboardKeyUp = new KeyboardEvent('keyup', {
           bubbles: true,
           cancelable: true,
