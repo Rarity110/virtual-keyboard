@@ -476,7 +476,6 @@ class Keyboard {
       }
       // прослушивание capslock, перерисовка клавиатуры, изменение регистра
       if (e.code === 'CapsLock') {
-        //  if (!e.shiftKey) {
         if (this.caps === false) {
           this.caps = true;
           if (keyPress.classList.contains('activ')) {
@@ -493,7 +492,6 @@ class Keyboard {
             keyPress.classList.add('activ');
           }
           this.changeCase(e.shiftKey);
-          // }
         }
       } else if (e.ctrlKey && e.altKey && !e.repeat) {
         keyPress.classList.add('activ');
@@ -535,6 +533,10 @@ class Keyboard {
         keyPress.classList.add('activ');
         e.preventDefault();
         this.arrowUp();
+      } else if (e.code === 'ArrowDown') {
+        keyPress.classList.add('activ');
+        e.preventDefault();
+        this.arrowDown();
       } else {
         keyPress.classList.add('activ');
         if (this.keys[e.code].simb === false) {
@@ -560,7 +562,7 @@ class Keyboard {
         e.preventDefault();
         return;
       }
-      if (e.code !== 'CapsLock' /* && e.code !== 'ShiftLeft' && e.code !== 'ShiftRight' */) {
+      if (e.code !== 'CapsLock') {
         setTimeout(() => {
           keyPressed.classList.remove('activ');
         }, 500);
@@ -677,7 +679,7 @@ class Keyboard {
       }
     }
 
-    if (this.textarea.selectionStart < massText[0].length) return;
+    if (this.textarea.selectionStart < massText[0].length + 1) return;
 
     for (let n = 0; n < lineNumber; n += 1) {
       lengthOfPrevLine += massText[n].length;
@@ -696,6 +698,47 @@ class Keyboard {
       this.textarea.selectionStart = lengthOfPrevLine + lineNumber - 1;
     } else {
       this.textarea.selectionStart = lengthOfPrevPrevLine + positionKursorInLine + lineNumber - 1;
+    }
+    this.textarea.selectionEnd = this.textarea.selectionStart;
+  }
+
+  arrowDown() {
+    const massText = this.textarea.value.split('\n');
+    let countTemp = 0;
+    let lineNumber = 0;
+    let lengthOfPrevLine = 0;
+    let lengthOfCurrLine = 0;
+
+    for (let m = 0; m < massText.length; m += 1) {
+      if (countTemp < this.textarea.selectionStart) {
+        countTemp += (massText[m].length + 1);
+        lineNumber = m;
+      }
+    }
+
+    if (massText.length === lineNumber + 1) return;
+
+    for (let n = 0; n < lineNumber; n += 1) {
+      lengthOfPrevLine += massText[n].length;
+    }
+    for (let n = 0; n < lineNumber + 1; n += 1) {
+      lengthOfCurrLine += massText[n].length;
+    }
+    const positionKursorInLine = this.textarea.selectionStart - lineNumber - lengthOfPrevLine;
+    if ((positionKursorInLine === massText[lineNumber].length + 1)
+    && massText[lineNumber + 1].length === 0) {
+      this.textarea.selectionStart += 1;
+    } else if (massText[lineNumber].length === 0) {
+      this.textarea.selectionStart = lengthOfCurrLine
+      + massText[lineNumber + 1].length + lineNumber + 2;
+    } else if (positionKursorInLine === massText[lineNumber].length + 1) {
+      this.textarea.selectionStart = lengthOfCurrLine
+      + massText[lineNumber + 1].length + lineNumber + 2;
+    } else if (massText[lineNumber + 1].length < positionKursorInLine) {
+      this.textarea.selectionStart = lengthOfCurrLine
+      + massText[lineNumber + 1].length + lineNumber + 1;
+    } else {
+      this.textarea.selectionStart = lengthOfCurrLine + positionKursorInLine + lineNumber + 1;
     }
     this.textarea.selectionEnd = this.textarea.selectionStart;
   }
