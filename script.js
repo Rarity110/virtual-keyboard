@@ -577,7 +577,9 @@ class Keyboard {
         } else {
           this.caps = false;
         }
-        this.changeCase(e.shiftKey);
+        setTimeout(() => {
+          this.changeCase(e.shiftKey);
+        }, 500);
       }
     });
 
