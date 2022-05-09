@@ -501,11 +501,13 @@ class Keyboard {
         if (this.caps === false) {
           this.caps = true;
           keyPress.classList.add('activ');
-          this.changeCase(e.shiftKey);
+          // this.changeCase(e.shiftKey);
+          this.changeCase(true);
         } else {
           this.caps = false;
           keyPress.classList.add('activ');
-          this.changeCase(e.shiftKey);
+          // this.changeCase(e.shiftKey);
+          this.changeCase(true);
         }
       } else if (e.code === 'Tab') {
         keyPress.classList.add('activ');
@@ -584,7 +586,7 @@ class Keyboard {
     });
 
     this.keyboard.addEventListener('click', (e) => {
-      if (e.target.classList.contains('simbol') && (e.target.id !== 'ShiftLeft' || e.target.id !== 'ShiftRight')) {
+      if (e.target.classList.contains('simbol') && e.target.id !== 'ShiftLeft' && e.target.id !== 'ShiftRight') {
         this.textarea.focus();
         const keyboardKeyDown = new KeyboardEvent('keydown', {
           bubbles: true,
@@ -593,15 +595,16 @@ class Keyboard {
           view: window,
         });
         document.dispatchEvent(keyboardKeyDown);
+
+        this.textarea.focus();
+        const keyboardKeyUp = new KeyboardEvent('keyup', {
+          bubbles: true,
+          cancelable: true,
+          code: e.target.id,
+          view: window,
+        });
+        document.dispatchEvent(keyboardKeyUp);
       }
-      this.textarea.focus();
-      const keyboardKeyUp = new KeyboardEvent('keyup', {
-        bubbles: true,
-        cancelable: true,
-        code: e.target.id,
-        view: window,
-      });
-      document.dispatchEvent(keyboardKeyUp);
     });
 
     this.keyboard.addEventListener('mousedown', (e) => {
@@ -656,6 +659,30 @@ class Keyboard {
         simbols[i].textContent = shiftKey ? '>' : '.';
       } else if (simbols[i].id === 'Slash' && this.lang === 'en') {
         simbols[i].textContent = shiftKey ? '?' : '/';
+      } else if (simbols[i].id === 'Digit1') {
+        simbols[i].textContent = shiftKey ? '!' : '1';
+      } else if (simbols[i].id === 'Digit2') {
+        simbols[i].textContent = shiftKey ? '@' : '2';
+      } else if (simbols[i].id === 'Digit3') {
+        simbols[i].textContent = shiftKey ? '#' : '3';
+      } else if (simbols[i].id === 'Digit4') {
+        simbols[i].textContent = shiftKey ? '$' : '4';
+      } else if (simbols[i].id === 'Digit5') {
+        simbols[i].textContent = shiftKey ? '%' : '5';
+      } else if (simbols[i].id === 'Digit6') {
+        simbols[i].textContent = shiftKey ? '^' : '6';
+      } else if (simbols[i].id === 'Digit7') {
+        simbols[i].textContent = shiftKey ? '&' : '7';
+      } else if (simbols[i].id === 'Digit8') {
+        simbols[i].textContent = shiftKey ? '*' : '8';
+      } else if (simbols[i].id === 'Digit9') {
+        simbols[i].textContent = shiftKey ? '(' : '9';
+      } else if (simbols[i].id === 'Digit0') {
+        simbols[i].textContent = shiftKey ? ')' : '0';
+      } else if (simbols[i].id === 'Minus') {
+        simbols[i].textContent = shiftKey ? '_' : '-';
+      } else if (simbols[i].id === 'Equal') {
+        simbols[i].textContent = shiftKey ? '+' : '=';
       } else if (simbols[i].id === 'Slash' && this.lang === 'ru') {
         simbols[i].textContent = shiftKey ? ',' : '.';
       } else if (simbols[i].dataset.simb === 'false') {
