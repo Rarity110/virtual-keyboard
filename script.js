@@ -447,6 +447,8 @@ class Keyboard {
     this.changelanguage.classList.add('informationtext');
     this.changelanguage.textContent = 'Для переключения языка комбинация: левые ctrl + alt';
     this.textarea.focus();
+
+    this.shiftMouseLeft = document.getElementById('ShiftLeft');
     this.addListeners();
   }
 
@@ -581,9 +583,29 @@ class Keyboard {
       }
     });
 
-    // создание кейбордивента на виртуальной клавиатуре
+    this.keyboard.addEventListener('click', (e) => {
+      if (e.target.classList.contains('simbol') && (e.target.id !== 'ShiftLeft' || e.target.id !== 'ShiftRight')) {
+        this.textarea.focus();
+        const keyboardKeyDown = new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          code: e.target.id,
+          view: window,
+        });
+        document.dispatchEvent(keyboardKeyDown);
+      }
+      this.textarea.focus();
+      const keyboardKeyUp = new KeyboardEvent('keyup', {
+        bubbles: true,
+        cancelable: true,
+        code: e.target.id,
+        view: window,
+      });
+      document.dispatchEvent(keyboardKeyUp);
+    });
+
     this.keyboard.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('simbol')) {
+      if (e.target.id === 'ShiftLeft' || e.target.id === 'ShiftRight') {
         this.textarea.focus();
         const keyboardKeyDown = new KeyboardEvent('keydown', {
           bubbles: true,
@@ -596,7 +618,7 @@ class Keyboard {
     });
 
     this.keyboard.addEventListener('mouseup', (e) => {
-      if (e.target.classList.contains('simbol')) {
+      if (e.target.id === 'ShiftLeft' || e.target.id === 'ShiftRight') {
         this.textarea.focus();
         const keyboardKeyUp = new KeyboardEvent('keyup', {
           bubbles: true,
