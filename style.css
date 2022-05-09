@@ -1,0 +1,101 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    border: none;
+    text-align: center;
+}
+
+h1 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: bold;
+    font-size: 32px;
+    line-height: 120%;
+    color: #1a0f9a;
+}
+
+.title {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.text-area {
+    max-height: calc((100vh - 280px) / 2);
+    height: 100%;
+    max-width: 800px;
+    width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-style: normal;
+    font-size: 18px;
+    padding-left: 5px;
+    resize: none;
+}
+
+.keyboard {
+    max-height: calc((100vh - 280px) / 2);
+    height: 100%;
+    max-width: 800px;
+    width: 100%;
+    background-color: silver;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.keyboardRow {
+    height: 19.5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.simbol {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: bold;
+    font-size: 16px;
+    margin: 0.1% 0.1% 0.1% 0.1%;
+    color: white;
+    background-color: rgb(78, 75, 75);
+    border-radius: 8%;
+}
+
+.simbol:hover{
+    background-color: rgb(63, 38, 135);
+}
+
+.normal {
+    width: 6%;
+}
+
+.long {
+    width: 8.8%;
+}
+
+.longest {
+    width: 15%;
+}
+
+.space {
+    width: 37.6%;
+}
+
+.information {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: normal;
+    font-size: 14px;
+    color: #1a0f9a;
+}
+
+.activ {
+    background-color: blue;
+    border-radius: 20px;
+}
